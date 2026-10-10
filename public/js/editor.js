@@ -16,6 +16,14 @@
 
   const formData = () => Object.fromEntries(new FormData(form).entries());
 
+  // 11-Oct-2026 14:05
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const pad = (n) => String(n).padStart(2, '0');
+  const formatDate = (iso) => {
+    const d = new Date(iso);
+    return `${pad(d.getDate())}-${MONTHS[d.getMonth()]}-${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  };
+
   async function api(method, path, body) {
     const res = await fetch(path, {
       method,
@@ -85,7 +93,7 @@
     companySelect.value = String(json.company_id);
     if (!companySelect.value) companySelect.value = '';
     lastCompanyWebsite = (companies.find((x) => x.id === json.company_id) || {}).website_url || '';
-    const when = new Date(json.updated_at || json.created_at).toLocaleString();
+    const when = formatDate(json.updated_at || json.created_at);
     setNotice(`We found your signature (last generated ${when}) and loaded it. Edit anything you like and generate again to update it.`);
     markAll();
     schedulePreview();
