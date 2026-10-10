@@ -55,3 +55,11 @@ CREATE TABLE IF NOT EXISTS signature_logs (
 );
 
 CREATE INDEX IF NOT EXISTS signature_logs_email_idx ON signature_logs (email, created_at DESC);
+
+-- Icon name -> public URL. Templates use {{icon "name"}}; when a name is missing
+-- or its url is empty the app falls back to PUBLIC_BASE_URL/icons/<name>.png.
+CREATE TABLE IF NOT EXISTS icons (
+  name        TEXT PRIMARY KEY,
+  url         TEXT NOT NULL DEFAULT '',
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);

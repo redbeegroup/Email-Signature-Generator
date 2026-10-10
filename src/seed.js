@@ -35,6 +35,35 @@ export async function seedCompanies() {
   return inserted;
 }
 
+export function loadSeedIcons() {
+  return JSON.parse(fs.readFileSync(path.join(SEED_DIR, 'icons.json'), 'utf8'));
+}
+
+/** Insert icon URLs that do not exist yet. Never updates, so Adminer edits win. */
+export async function seedIcons() {
+  let inserted = 0;
+  for (const [name, url] of Object.entries(loadSeedIcons())) {
+    const res = await query('INSERT INTO icons (name, url) VALUES ($1, $2) ON CONFLICT (name) DO NOTHING', [name, url]);
+    inserted += res.rowCount;
+  }
+  console.log(`[seed] icons inserted: ${inserted}`);
+  return inserted;
+}
+
+/** Overwrite every icon url listed in seeds/icons.json. Explicit, opt-in. */
+export async function syncIcons() {
+  let updated = 0;
+  for (const [name, url] of Object.entries(loadSeedIcons())) {
+    const res = await query(
+      'INSERT INTO icons (name, url) VALUES ($1, $2) ON CONFLICT (name) DO UPDATE SET url = EXCLUDED.url, updated_at = now()',
+      [name, url]
+    );
+    updated += res.rowCount;
+  }
+  console.log(`[seed] icons synced: ${updated}`);
+  return updated;
+}
+
 /**
  * Overwrite template_html for every company listed in seeds/companies.json
  * with the current seed file. Explicit, opt-in: it discards template edits
@@ -53,12 +82,15 @@ export async function syncTemplates() {
   return updated;
 }
 
-// CLI:  node src/seed.js                   -> insert missing companies
+// CLI:  node src/seed.js                   -> insert missing companies and icons
 //       node src/seed.js --sync-templates  -> also overwrite templates from seed files
+//       node src/seed.js --sync-icons      -> also overwrite icon urls from seeds/icons.json
 if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
   const { initDb, closeDb } = await import('./db.js');
   await initDb();
   await seedCompanies();
+  await seedIcons();
   if (process.argv.includes('--sync-templates')) await syncTemplates();
+  if (process.argv.includes('--sync-icons')) await syncIcons();
   await closeDb();
 }

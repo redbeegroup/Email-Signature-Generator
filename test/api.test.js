@@ -10,7 +10,7 @@ if (!DB) {
 } else {
   const { createApp } = await import('../src/app.js');
   const { initDb, query, closeDb } = await import('../src/db.js');
-  const { seedCompanies } = await import('../src/seed.js');
+  const { seedCompanies, seedIcons } = await import('../src/seed.js');
   const request = (await import('supertest')).default;
   const app = createApp();
   let company;
@@ -18,6 +18,7 @@ if (!DB) {
   before(async () => {
     await initDb({ retries: 3, delayMs: 500 });
     await seedCompanies();
+    await seedIcons();
     await query('DELETE FROM signatures WHERE email = $1', [TEST_EMAIL]);
     company = (await query(`SELECT * FROM companies WHERE slug = 'onelink'`)).rows[0];
   });
@@ -37,6 +38,7 @@ if (!DB) {
     const res = await request(app).post('/api/signatures/preview')
       .send({ name: 'Preview Person', company_id: company.id }).expect(200);
     assert.match(res.body.html, /Preview Person/);
+    assert.match(res.body.html, /imagedelivery\.net/, 'icons come from the icons table');
     const empty = await request(app).post('/api/signatures/preview').send({}).expect(200);
     assert.equal(empty.body.html, '');
   });

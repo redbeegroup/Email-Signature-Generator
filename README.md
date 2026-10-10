@@ -42,6 +42,7 @@ Three tables (see `db/schema.sql`), applied automatically on start:
 
 - `companies` — `name`, `slug`, `logo_url`, `website_url`, `template_html`, `is_active`, `sort_order`.
 - `signatures` — exactly one row per email address: person fields, `company_id`, `rendered_html`, `created_at`, `updated_at`. Generating again for the same email updates this row.
+- `icons` — icon `name` → public `url` (seeded from `seeds/icons.json`, currently Cloudflare Images). Templates use `{{icon "name"}}`; an empty or missing url falls back to `PUBLIC_BASE_URL/icons/<name>.png`.
 - `signature_logs` — one row per generate click: `signature_id`, `email`, `action` (`created` or `updated`), `data` (JSON snapshot of the submitted fields), `rendered_html`, `created_at`. This is the history.
 
 ### Adding or editing a company
@@ -58,6 +59,8 @@ docker compose exec app node src/seed.js --sync-templates
 
 This overwrites `template_html` only, and only for companies listed in `seeds/companies.json`. Logo, website and name are left as they are in the database.
 
+Icon URLs work the same way: `seeds/icons.json` is inserted once, edits in Adminer win, and `node src/seed.js --sync-icons` overwrites them from the file. To move an icon, upload the PNG from `public/icons/`, then put its URL in the `icons` table (or the seed file and sync).
+
 ### Template placeholders
 
 Templates are [Handlebars](https://handlebarsjs.com/) HTML fragments.
@@ -69,7 +72,8 @@ Templates are [Handlebars](https://handlebarsjs.com/) HTML fragments.
 | `{{office_phone}}` `{{mobile_phone}}` `{{email}}` | from the form |
 | `{{website_url}}` | form value, or the company's `website_url` if blank |
 | `{{linkedin_url}}` `{{whatsapp_url}}` `{{viber_url}}` | from the form (phone numbers are converted to `wa.me` / `viber://` links) |
-| `{{assets}}` | `PUBLIC_BASE_URL/icons` |
+| `{{icon "desk-phone-0066ff"}}` | URL from the `icons` table, else `PUBLIC_BASE_URL/icons/<name>.png` |
+| `{{assets}}` | `PUBLIC_BASE_URL/icons` (plain fallback base) |
 
 Helpers: `{{tel mobile_phone}}` (digits only for `tel:` links), `{{#if (or a b)}}`, `{{#if (and a b)}}`, `{{stripProtocol website_url}}`.
 Wrap optional parts: `{{#if department}}<p>{{department}}</p>{{/if}}`.

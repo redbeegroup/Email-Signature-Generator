@@ -68,3 +68,11 @@ test('URL fields keep "=" unescaped but still escape quotes', () => {
   assert.doesNotMatch(evil, /onmouseover="alert/);
   assert.equal(renderSignature(c, base, { assetsBase: '' }), '<a href="">v</a>');
 });
+
+test('icon helper uses the map and falls back to assets path', () => {
+  const c = { ...company, template_html: '<img src="{{icon "phone-0066ff"}}"><img src="{{icon "email-0066ff"}}">' };
+  const html = renderSignature(c, base, { assetsBase: 'https://sig.test/icons', icons: { 'phone-0066ff': 'https://cdn.test/p?v=1&x=2' } });
+  assert.equal(html, '<img src="https://cdn.test/p?v=1&amp;x=2"><img src="https://sig.test/icons/email-0066ff.png">');
+  const none = renderSignature(c, base, { assetsBase: 'https://sig.test/icons' });
+  assert.match(none, /https:\/\/sig\.test\/icons\/phone-0066ff\.png/);
+});

@@ -3,6 +3,7 @@ import { query } from '../db.js';
 import { renderSignature } from '../render.js';
 import { normalizeInput, validateInput } from '../normalize.js';
 import { ASSETS_BASE } from '../config.js';
+import { getIconMap } from '../icons.js';
 
 export const signaturesRouter = Router();
 
@@ -27,7 +28,7 @@ async function prepare(req, res) {
     res.status(400).json({ errors: { company_id: 'Unknown company' } });
     return null;
   }
-  const html = renderSignature(company, data, { assetsBase: ASSETS_BASE });
+  const html = renderSignature(company, data, { assetsBase: ASSETS_BASE, icons: await getIconMap() });
   return { data, company, html };
 }
 
@@ -38,7 +39,7 @@ signaturesRouter.post('/preview', async (req, res, next) => {
     if (!data.company_id) return res.json({ html: '' });
     const company = await getCompany(data.company_id);
     if (!company) return res.json({ html: '' });
-    res.json({ html: renderSignature(company, data, { assetsBase: ASSETS_BASE }) });
+    res.json({ html: renderSignature(company, data, { assetsBase: ASSETS_BASE, icons: await getIconMap() }) });
   } catch (err) { next(err); }
 });
 
