@@ -1,3 +1,5 @@
+import { formatPhone } from './phone.js';
+
 (() => {
   const form = document.getElementById('form');
   const preview = document.getElementById('preview');
@@ -150,6 +152,13 @@
   });
   companySelect.addEventListener('change', () => { onCompanyChange(); schedulePreview(); });
   emailInput.addEventListener('blur', () => lookup(emailInput.value));
+  for (const name of ['office_phone', 'mobile_phone']) {
+    const el = form.elements[name];
+    el.addEventListener('blur', () => {
+      const formatted = formatPhone(el.value);
+      if (formatted !== el.value) { el.value = formatted; markValidity(el); schedulePreview(); }
+    });
+  }
   emailInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); lookup(emailInput.value); } });
   form.addEventListener('submit', (e) => { e.preventDefault(); generate(); });
   document.getElementById('generate').addEventListener('click', generate);
