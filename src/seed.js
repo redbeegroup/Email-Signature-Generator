@@ -34,3 +34,31 @@ export async function seedCompanies() {
   console.log(`[seed] companies inserted: ${inserted}`);
   return inserted;
 }
+
+/**
+ * Overwrite template_html for every company listed in seeds/companies.json
+ * with the current seed file. Explicit, opt-in: it discards template edits
+ * made in Adminer for those companies (logo, website, name are untouched).
+ */
+export async function syncTemplates() {
+  let updated = 0;
+  for (const c of loadSeedCompanies()) {
+    const res = await query(
+      'UPDATE companies SET template_html = $1, updated_at = now() WHERE slug = $2',
+      [c.template_html, c.slug]
+    );
+    updated += res.rowCount;
+  }
+  console.log(`[seed] templates synced: ${updated}`);
+  return updated;
+}
+
+// CLI:  node src/seed.js                   -> insert missing companies
+//       node src/seed.js --sync-templates  -> also overwrite templates from seed files
+if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+  const { initDb, closeDb } = await import('./db.js');
+  await initDb();
+  await seedCompanies();
+  if (process.argv.includes('--sync-templates')) await syncTemplates();
+  await closeDb();
+}

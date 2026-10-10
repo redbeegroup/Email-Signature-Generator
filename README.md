@@ -50,6 +50,14 @@ Use Adminer. Insert a row into `companies` with at least `name` and `slug`; set 
 
 The seed in `seeds/companies.json` only inserts companies whose `slug` is missing. It never overwrites, so your edits in Adminer are preserved across restarts.
 
+When the template files in `seeds/templates/` change (for example after a new company design is added to the repo), push them into the running database with:
+
+```bash
+docker compose exec app node src/seed.js --sync-templates
+```
+
+This overwrites `template_html` only, and only for companies listed in `seeds/companies.json`. Logo, website and name are left as they are in the database.
+
 ### Template placeholders
 
 Templates are [Handlebars](https://handlebarsjs.com/) HTML fragments.
@@ -66,7 +74,7 @@ Templates are [Handlebars](https://handlebarsjs.com/) HTML fragments.
 Helpers: `{{tel mobile_phone}}` (digits only for `tel:` links), `{{#if (or a b)}}`, `{{#if (and a b)}}`, `{{stripProtocol website_url}}`.
 Wrap optional parts: `{{#if department}}<p>{{department}}</p>{{/if}}`.
 
-Icons available in `public/icons/`: `phone`, `email`, `link` (coloured glyph, 32px, show at 16) and `linkedin`, `whatsapp`, `viber` (white glyph on coloured circle, 48px, show at 24), each as `<name>-<hex>.png`. Add colours in `scripts/make-icons.mjs` and run `npm run icons`.
+Icons available in `public/icons/`: `desk-phone` (office), `phone` (mobile handset), `email`, `link` (coloured glyph, 32px, show at 16) and `linkedin`, `whatsapp`, `viber` (white glyph on coloured circle, 48px, show at 24), each as `<name>-<hex>.png`. Add colours in `scripts/make-icons.mjs` and run `npm run icons`.
 
 ## Development
 
