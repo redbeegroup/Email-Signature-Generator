@@ -29,11 +29,12 @@ test('turns phone numbers into wa.me and viber links', () => {
 test('validation errors for required fields', () => {
   assert.deepEqual(validateInput(normalizeInput({})), {
     name: 'Name is required',
+    job_title: 'Job title is required',
     email: 'A valid email address is required',
     company_id: 'Please choose a company'
   });
-  assert.deepEqual(validateInput(normalizeInput({ name: 'A', email: 'bad', company_id: 1 })), {
+  assert.deepEqual(validateInput(normalizeInput({ name: 'A', job_title: 'T', email: 'bad', company_id: 1 })), {
     email: 'A valid email address is required'
   });
-  assert.deepEqual(validateInput(normalizeInput({ name: 'A', email: 'a@b.co', company_id: 1 })), {});
+  assert.deepEqual(validateInput(normalizeInput({ name: 'A', job_title: 'T', email: 'a@b.co', company_id: 1 })), {});
 });

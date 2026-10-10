@@ -99,6 +99,7 @@
   function clientValidate(data) {
     const problems = [];
     if (!data.name.trim()) problems.push('Name is required');
+    if (!data.job_title.trim()) problems.push('Job title is required');
     if (!data.company_id) problems.push('Please choose a company');
     if (!EMAIL_RE.test(data.email.trim())) problems.push('A valid email address is required');
     return problems;

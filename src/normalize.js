@@ -30,6 +30,7 @@ export function normalizeInput(body = {}) {
 export function validateInput(data) {
   const errors = {};
   if (!data.name) errors.name = 'Name is required';
+  if (!data.job_title) errors.job_title = 'Job title is required';
   if (!EMAIL_RE.test(data.email)) errors.email = 'A valid email address is required';
   if (!data.company_id) errors.company_id = 'Please choose a company';
   return errors;

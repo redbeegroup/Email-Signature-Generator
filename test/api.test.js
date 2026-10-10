@@ -46,6 +46,7 @@ if (!DB) {
   test('POST /api/signatures validates', async () => {
     const res = await request(app).post('/api/signatures').send({ email: 'nope' }).expect(400);
     assert.ok(res.body.errors.name);
+    assert.ok(res.body.errors.job_title);
     assert.ok(res.body.errors.email);
     assert.ok(res.body.errors.company_id);
   });
@@ -58,7 +59,7 @@ if (!DB) {
     assert.equal(first.body.action, 'created');
 
     const second = await request(app).post('/api/signatures')
-      .send({ name: 'Second', email: TEST_EMAIL, company_id: company.id, whatsapp_url: '+95 9 510 7034' })
+      .send({ name: 'Second', job_title: 'Lead', email: TEST_EMAIL, company_id: company.id, whatsapp_url: '+95 9 510 7034' })
       .expect(200);
     assert.equal(second.body.id, first.body.id);
     assert.equal(second.body.action, 'updated');
@@ -66,7 +67,7 @@ if (!DB) {
     const rows = await query('SELECT * FROM signatures WHERE email = $1', [TEST_EMAIL]);
     assert.equal(rows.rowCount, 1);
     assert.equal(rows.rows[0].name, 'Second');
-    assert.equal(rows.rows[0].job_title, '');
+    assert.equal(rows.rows[0].job_title, 'Lead');
 
     const byId = await request(app).get(`/api/signatures/${first.body.id}`).expect(200);
     assert.equal(byId.body.name, 'Second');
