@@ -1,0 +1,6 @@
+# Loaded automatically by `docker compose up` for LOCAL development only.
+# Production uses: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+services:
+  db:
+    ports:
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5433}:5432"   # lets `npm test` reach the DB

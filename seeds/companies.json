@@ -1,0 +1,9 @@
+[
+  { "name": "Yatharcho Industry Ltd.",               "slug": "yatharcho",      "logo_url": "", "website_url": "", "template": "default.html", "sort_order": 10 },
+  { "name": "Cho Cho Industry Ltd.",                 "slug": "chocho-industry","logo_url": "", "website_url": "", "template": "default.html", "sort_order": 20 },
+  { "name": "Myanmar Zarla Distribution Co., Ltd.",  "slug": "zarla",          "logo_url": "", "website_url": "", "template": "default.html", "sort_order": 30 },
+  { "name": "Myanmar Parama Technologies Co., Ltd.", "slug": "parama",         "logo_url": "", "website_url": "", "template": "default.html", "sort_order": 40 },
+  { "name": "Onelink Technologies Co., Ltd.",        "slug": "onelink",        "logo_url": "https://onelink.company/assets/onelink-logo-0eMWMAIE.png", "website_url": "https://onelink.company", "template": "onelink.html", "sort_order": 50 },
+  { "name": "Cannopy Technologies Co., Ltd.",        "slug": "cannopy",        "logo_url": "", "website_url": "", "template": "default.html", "sort_order": 60 },
+  { "name": "Cho Cho Co., Ltd.",                     "slug": "chocho",         "logo_url": "", "website_url": "", "template": "default.html", "sort_order": 70 }
+]

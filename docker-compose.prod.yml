@@ -1,0 +1,11 @@
+# Production override. Adminer is only reachable from the host itself;
+# open it through an SSH tunnel:  ssh -L 8081:localhost:8081 user@host
+services:
+  app:
+    restart: always
+  db:
+    restart: always
+  adminer:
+    restart: always
+    ports: !override
+      - "127.0.0.1:${ADMINER_PORT:-8081}:8080"

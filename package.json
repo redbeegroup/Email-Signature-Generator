@@ -1,0 +1,23 @@
+{
+  "name": "email-signature-generator",
+  "version": "1.0.0",
+  "description": "Internal email signature generator with per-company templates and stored history",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test test/*.test.js",
+    "icons": "node scripts/make-icons.mjs"
+  },
+  "engines": { "node": ">=22" },
+  "dependencies": {
+    "express": "^4.21.2",
+    "handlebars": "^4.7.8",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "sharp": "^0.33.5",
+    "supertest": "^7.0.0"
+  }
+}

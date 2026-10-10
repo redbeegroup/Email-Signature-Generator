@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Email Signature Generator</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="page-editor">
+  <main class="layout">
+    <section class="editor" aria-label="Signature details">
+      <form id="form" novalidate autocomplete="on">
+        <h1>Enter Your Signature Details</h1>
+        <p class="hint">* Indicates a required field</p>
+        <hr>
+
+        <div class="grid">
+          <label class="field">
+            <span>Name<b>*</b></span>
+            <input name="name" type="text" required autocomplete="name" placeholder="Your full name">
+          </label>
+          <label class="field">
+            <span>Job Title</span>
+            <input name="job_title" type="text" autocomplete="organization-title" placeholder="Chief Technology Officer">
+          </label>
+          <label class="field">
+            <span>Department</span>
+            <input name="department" type="text" placeholder="IT Department">
+          </label>
+          <label class="field">
+            <span>Company Name<b>*</b></span>
+            <select name="company_id" required>
+              <option value="">Choose a company…</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Office Phone Number</span>
+            <input name="office_phone" type="tel" placeholder="+95 1 234 5678">
+          </label>
+          <label class="field">
+            <span>Mobile Phone Number</span>
+            <input name="mobile_phone" type="tel" autocomplete="tel" placeholder="+95 9 123 456 789">
+          </label>
+          <label class="field">
+            <span>Website URL</span>
+            <input name="website_url" type="url" placeholder="Auto-filled from company">
+          </label>
+          <label class="field">
+            <span>Email Address<b>*</b></span>
+            <input name="email" type="email" required autocomplete="email" placeholder="you@company.com">
+          </label>
+        </div>
+
+        <div id="notice" class="notice" hidden></div>
+
+        <h2>Enter Your Social Links</h2>
+        <hr>
+        <div class="grid">
+          <label class="field">
+            <span>LinkedIn</span>
+            <input name="linkedin_url" type="url" placeholder="https://www.linkedin.com/in/…">
+          </label>
+          <label class="field">
+            <span>WhatsApp</span>
+            <input name="whatsapp_url" type="text" placeholder="Phone number or https://wa.me/…">
+          </label>
+          <label class="field field--full">
+            <span>Viber</span>
+            <input name="viber_url" type="text" placeholder="Phone number or viber://chat?number=…">
+          </label>
+        </div>
+      </form>
+    </section>
+
+    <section class="preview-pane" aria-label="Preview">
+      <div class="mail-window">
+        <div class="mail-window__bar"><i></i><i></i><i></i></div>
+        <div class="mail-window__head">
+          <div><b>To:</b> <span class="chip">Your Recipient</span></div>
+          <div><b>Subject:</b> Check out my new Email Signature</div>
+        </div>
+        <div class="mail-window__body">
+          <div class="mail-window__line"></div>
+          <div class="mail-window__line mail-window__line--short"></div>
+          <div id="preview" class="signature"></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" id="clear" class="btn btn--link">&#8635; Clear all input fields</button>
+        <button type="button" id="generate" class="btn btn--primary">Generate signature</button>
+      </div>
+      <p id="error" class="error" hidden></p>
+    </section>
+  </main>
+  <script src="/js/editor.js"></script>
+</body>
+</html>

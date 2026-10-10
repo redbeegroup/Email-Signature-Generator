@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your Email Signature</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="page-result">
+  <main class="result">
+    <h1 class="result__title">A Shiny New Email Signature, Just For You.</h1>
+    <p class="result__lead">Now it’s time to put your email signature to work. Copy it below and add it to your email client using the instructions at the bottom of the page.</p>
+
+    <div class="mail-window">
+      <div class="mail-window__bar"><i></i><i></i><i></i></div>
+      <div class="mail-window__head">
+        <div><b>To:</b> <span class="chip">Your Recipient</span></div>
+        <div><b>Subject:</b> Check out my new Email Signature</div>
+      </div>
+      <div class="mail-window__body">
+        <div class="mail-window__line"></div>
+        <div class="mail-window__line mail-window__line--short"></div>
+        <div id="preview" class="signature"></div>
+      </div>
+    </div>
+
+    <div class="actions actions--center">
+      <button type="button" id="copy" class="btn btn--primary">Copy signature</button>
+      <button type="button" id="copy-source" class="btn btn--outline">Copy signature source code</button>
+      <a id="back" class="btn btn--white" href="/">Back to editor</a>
+    </div>
+    <p id="status" class="status" aria-live="polite"></p>
+    <p id="error" class="error" hidden></p>
+
+    <hr class="result__rule">
+    <h2 class="result__sub">Add to your email</h2>
+    <div class="howto-links">
+      <button type="button" class="howto-link" data-howto="outlook">Add to Outlook <span class="howto-link__icon">O</span></button>
+      <span class="howto-sep"></span>
+      <button type="button" class="howto-link" data-howto="apple">Add to Apple Mail <span class="howto-link__icon">&#63743;</span></button>
+    </div>
+  </main>
+
+  <div id="modal" class="modal" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal__head">
+        <h3 id="modal-title">Frequently Asked Questions</h3>
+        <button type="button" class="modal__close" data-close aria-label="Close">&times;</button>
+      </div>
+      <div class="modal__body">
+        <section id="howto-outlook" hidden>
+          <h4>How do I add my new email signature to Outlook (Windows &amp; Mac)?</h4>
+          <ol>
+            <li>Click <b>Copy signature</b> above.</li>
+            <li>Open Outlook and start a <b>New Email</b>.</li>
+            <li>On the <b>Message</b> tab, choose <b>Signature &gt; Signatures…</b> (on Mac: <b>Outlook &gt; Settings &gt; Signatures</b>).</li>
+            <li>Click <b>New</b> (or <b>+</b>), give the signature a name, and paste into the editing area.</li>
+            <li>Under <b>Choose default signature</b>, pick this signature for <b>New messages</b> and, if you like, <b>Replies/forwards</b>.</li>
+            <li>Click <b>OK</b> / <b>Save</b>. Your signature is now inserted automatically.</li>
+          </ol>
+          <h4>How do I create a signature for Outlook on the web and Outlook.com?</h4>
+          <ol>
+            <li>Click <b>Copy signature</b> above.</li>
+            <li>Sign in to Outlook on the web and click the <b>Settings</b> cog (top-right).</li>
+            <li>Go to <b>Mail &gt; Compose and reply</b>.</li>
+            <li>Click <b>New signature</b>, give it a name, and paste into the editor.</li>
+            <li>Under <b>Select default signatures</b>, choose it for new messages and replies/forwards.</li>
+            <li>Click <b>Save</b>.</li>
+          </ol>
+          <p class="modal__note">Tip: if images look missing in the editor, send yourself a test email. Outlook loads the icons and logo from the web when the message is viewed.</p>
+        </section>
+        <section id="howto-apple" hidden>
+          <h4>How do I add my new email signature to Apple Mail (macOS)?</h4>
+          <ol>
+            <li>Click <b>Copy signature</b> above.</li>
+            <li>Open <b>Mail</b> and choose <b>Mail &gt; Settings…</b> (or <b>Preferences…</b>), then the <b>Signatures</b> tab.</li>
+            <li>Select your email account in the left column and click <b>+</b> to create a new signature. Give it a name.</li>
+            <li>Click into the signature box on the right, delete the default text, and paste (<b>⌘V</b>).</li>
+            <li>Untick <b>Always match my default message font</b> so the signature keeps its own styling.</li>
+            <li>Use the <b>Choose Signature</b> menu at the bottom to make it the default, then close the window.</li>
+          </ol>
+          <h4>iPhone and iPad</h4>
+          <p>The Mail app on iOS keeps signatures as plain text, so logos and icons cannot be added there. Send yourself an email from your Mac with the new signature, open it on the phone, select and copy the signature, then paste it in <b>Settings &gt; Mail &gt; Signature</b>. Formatting will be simplified.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+  <script src="/js/result.js"></script>
+</body>
+</html>
