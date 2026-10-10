@@ -7,7 +7,7 @@ import { ASSETS_BASE } from '../config.js';
 export const signaturesRouter = Router();
 
 const PUBLIC_COLS = `id, email, name, job_title, department, company_id, office_phone,
-  mobile_phone, website_url, linkedin_url, whatsapp_url, viber_url, rendered_html, created_at`;
+  mobile_phone, website_url, linkedin_url, whatsapp_url, viber_url, rendered_html, created_at, updated_at`;
 
 async function getCompany(id) {
   const { rows } = await query('SELECT * FROM companies WHERE id = $1 AND is_active', [id]);
@@ -42,7 +42,8 @@ signaturesRouter.post('/preview', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// Generate: validate, render, store.
+// Generate: validate, render, then insert or update the one row for this email
+// and append an entry to signature_logs.
 signaturesRouter.post('/', async (req, res, next) => {
   try {
     const prepared = await prepare(req, res);
@@ -51,21 +52,33 @@ signaturesRouter.post('/', async (req, res, next) => {
     const { rows } = await query(
       `INSERT INTO signatures (email, name, job_title, department, company_id, office_phone,
          mobile_phone, website_url, linkedin_url, whatsapp_url, viber_url, rendered_html)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING id`,
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+       ON CONFLICT (email) DO UPDATE SET
+         name = EXCLUDED.name, job_title = EXCLUDED.job_title, department = EXCLUDED.department,
+         company_id = EXCLUDED.company_id, office_phone = EXCLUDED.office_phone,
+         mobile_phone = EXCLUDED.mobile_phone, website_url = EXCLUDED.website_url,
+         linkedin_url = EXCLUDED.linkedin_url, whatsapp_url = EXCLUDED.whatsapp_url,
+         viber_url = EXCLUDED.viber_url, rendered_html = EXCLUDED.rendered_html, updated_at = now()
+       RETURNING id, (xmax = 0) AS inserted`,
       [data.email, data.name, data.job_title, data.department, data.company_id, data.office_phone,
        data.mobile_phone, data.website_url, data.linkedin_url, data.whatsapp_url, data.viber_url, html]
     );
-    res.status(201).json({ id: rows[0].id, html });
+    const { id, inserted } = rows[0];
+    await query(
+      `INSERT INTO signature_logs (signature_id, email, action, data, rendered_html) VALUES ($1, $2, $3, $4, $5)`,
+      [id, data.email, inserted ? 'created' : 'updated', JSON.stringify(data), html]
+    );
+    res.status(inserted ? 201 : 200).json({ id, html, action: inserted ? 'created' : 'updated' });
   } catch (err) { next(err); }
 });
 
-// Latest stored signature for an email (used to pre-fill the editor).
+// The stored signature for an email (used to pre-fill the editor).
 signaturesRouter.get('/lookup', async (req, res, next) => {
   try {
     const email = String(req.query.email || '').trim().toLowerCase();
     if (!email) return res.status(400).json({ error: 'email is required' });
     const { rows } = await query(
-      `SELECT ${PUBLIC_COLS} FROM signatures WHERE email = $1 ORDER BY created_at DESC, id DESC LIMIT 1`,
+      `SELECT ${PUBLIC_COLS} FROM signatures WHERE email = $1`,
       [email]
     );
     if (!rows[0]) return res.status(404).json({ error: 'not found' });

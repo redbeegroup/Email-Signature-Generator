@@ -48,23 +48,36 @@ if (!DB) {
     assert.ok(res.body.errors.company_id);
   });
 
-  test('generate, fetch by id, lookup latest by email', async () => {
+  test('one row per email: generate twice updates the same row and logs both', async () => {
     const first = await request(app).post('/api/signatures')
       .send({ name: 'First', email: TEST_EMAIL.toUpperCase(), company_id: company.id, job_title: 'Eng' })
       .expect(201);
     assert.match(first.body.html, /First/);
+    assert.equal(first.body.action, 'created');
 
     const second = await request(app).post('/api/signatures')
       .send({ name: 'Second', email: TEST_EMAIL, company_id: company.id, whatsapp_url: '+95 9 510 7034' })
-      .expect(201);
+      .expect(200);
+    assert.equal(second.body.id, first.body.id);
+    assert.equal(second.body.action, 'updated');
+
+    const rows = await query('SELECT * FROM signatures WHERE email = $1', [TEST_EMAIL]);
+    assert.equal(rows.rowCount, 1);
+    assert.equal(rows.rows[0].name, 'Second');
+    assert.equal(rows.rows[0].job_title, '');
 
     const byId = await request(app).get(`/api/signatures/${first.body.id}`).expect(200);
-    assert.equal(byId.body.name, 'First');
+    assert.equal(byId.body.name, 'Second');
     assert.equal(byId.body.email, TEST_EMAIL);
 
     const latest = await request(app).get('/api/signatures/lookup').query({ email: TEST_EMAIL }).expect(200);
-    assert.equal(latest.body.id, second.body.id);
+    assert.equal(latest.body.id, first.body.id);
     assert.equal(latest.body.whatsapp_url, 'https://wa.me/9595107034');
+
+    const logs = await query('SELECT action, data FROM signature_logs WHERE email = $1 ORDER BY id', [TEST_EMAIL]);
+    assert.deepEqual(logs.rows.map((r) => r.action), ['created', 'updated']);
+    assert.equal(logs.rows[0].data.name, 'First');
+    assert.equal(logs.rows[1].data.name, 'Second');
 
     await request(app).get('/api/signatures/lookup').query({ email: 'nobody@example.test' }).expect(404);
     await request(app).get('/api/signatures/999999999').expect(404);

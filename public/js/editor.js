@@ -85,8 +85,8 @@
     companySelect.value = String(json.company_id);
     if (!companySelect.value) companySelect.value = '';
     lastCompanyWebsite = (companies.find((x) => x.id === json.company_id) || {}).website_url || '';
-    const when = new Date(json.created_at).toLocaleString();
-    setNotice(`We found your previous signature (generated ${when}) and loaded it. Edit anything you like and generate again.`);
+    const when = new Date(json.updated_at || json.created_at).toLocaleString();
+    setNotice(`We found your signature (last generated ${when}) and loaded it. Edit anything you like and generate again to update it.`);
     markAll();
     schedulePreview();
   }

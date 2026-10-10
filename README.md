@@ -38,10 +38,11 @@ Update: `git pull && docker compose -f docker-compose.yml -f docker-compose.prod
 
 ## Database
 
-Two tables (see `db/schema.sql`), applied automatically on start:
+Three tables (see `db/schema.sql`), applied automatically on start:
 
 - `companies` — `name`, `slug`, `logo_url`, `website_url`, `template_html`, `is_active`, `sort_order`.
-- `signatures` — one row per generation: person fields, `company_id`, `rendered_html`, `created_at`. "Latest" for an email is the newest row.
+- `signatures` — exactly one row per email address: person fields, `company_id`, `rendered_html`, `created_at`, `updated_at`. Generating again for the same email updates this row.
+- `signature_logs` — one row per generate click: `signature_id`, `email`, `action` (`created` or `updated`), `data` (JSON snapshot of the submitted fields), `rendered_html`, `created_at`. This is the history.
 
 ### Adding or editing a company
 
