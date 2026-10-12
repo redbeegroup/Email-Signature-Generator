@@ -18,9 +18,9 @@
   {
     "name": "Myanmar Zarla Distribution Co., Ltd.",
     "slug": "zarla",
-    "logo_url": "",
-    "website_url": "",
-    "template": "default.html",
+    "logo_url": "https://imagedelivery.net/rvjv7XMSupWZCyUdtewEgQ/e1405616-9747-4145-bc53-e537e9903300/public",
+    "website_url": "https://www.zarladistribution.com",
+    "template": "zarla.html",
     "sort_order": 30
   },
   {
