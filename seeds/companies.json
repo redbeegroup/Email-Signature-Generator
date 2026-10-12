@@ -42,9 +42,9 @@
   {
     "name": "Cannopy Technologies Co., Ltd.",
     "slug": "cannopy",
-    "logo_url": "",
-    "website_url": "",
-    "template": "default.html",
+    "logo_url": "https://imagedelivery.net/rvjv7XMSupWZCyUdtewEgQ/96575ac6-5e47-4f96-b23c-d577f3bdba00/public",
+    "website_url": "https://cannopysystems.com",
+    "template": "cannopy.html",
     "sort_order": 60
   },
   {
