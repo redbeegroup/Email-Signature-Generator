@@ -10,7 +10,7 @@ const SVG_DIR = new URL('./svg/', import.meta.url).pathname;
 const OUT_DIR = new URL('../public/icons/', import.meta.url).pathname;
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
-const CONTACT = { names: ['phone', 'desk-phone', 'email', 'link'], colors: ['0066ff', '000000', '0a0f1f', 'ffffff', '666666'] };
+const CONTACT = { names: ['phone', 'desk-phone', 'email', 'link', 'globe'], colors: ['0066ff', 'ff0000', '000000', '0a0f1f', 'ffffff', '666666'] };
 const SOCIAL = { names: ['linkedin', 'whatsapp', 'viber'], colors: ['0a0f1f', '0066ff', '000000', '666666'] };
 
 const readSvg = (name) => fs.readFileSync(path.join(SVG_DIR, `${name}.svg`), 'utf8');

@@ -69,9 +69,10 @@ export async function syncIcons() {
  * with the current seed file. Explicit, opt-in: it discards template edits
  * made in Adminer for those companies (logo, website, name are untouched).
  */
-export async function syncTemplates() {
+export async function syncTemplates(onlySlugs = null) {
   let updated = 0;
   for (const c of loadSeedCompanies()) {
+    if (onlySlugs && !onlySlugs.includes(c.slug)) continue;
     const res = await query(
       'UPDATE companies SET template_html = $1, updated_at = now() WHERE slug = $2',
       [c.template_html, c.slug]
@@ -84,13 +85,15 @@ export async function syncTemplates() {
 
 // CLI:  node src/seed.js                   -> insert missing companies and icons
 //       node src/seed.js --sync-templates  -> also overwrite templates from seed files
+//       node src/seed.js --sync-templates --only=onelink,yatharcho  -> only those slugs
 //       node src/seed.js --sync-icons      -> also overwrite icon urls from seeds/icons.json
 if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
   const { initDb, closeDb } = await import('./db.js');
   await initDb();
   await seedCompanies();
   await seedIcons();
-  if (process.argv.includes('--sync-templates')) await syncTemplates();
+  const only = process.argv.find((a) => a.startsWith('--only='));
+  if (process.argv.includes('--sync-templates')) await syncTemplates(only ? only.slice(7).split(',') : null);
   if (process.argv.includes('--sync-icons')) await syncIcons();
   await closeDb();
 }
