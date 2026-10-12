@@ -13,10 +13,11 @@ CREATE TABLE IF NOT EXISTS companies (
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- One row per email address. Generating again for the same email updates the row.
+-- One row per (email, company). Generating again for the same pair updates the row;
+-- the same email can hold one signature per company.
 CREATE TABLE IF NOT EXISTS signatures (
   id            SERIAL PRIMARY KEY,
-  email         TEXT NOT NULL UNIQUE,
+  email         TEXT NOT NULL,
   name          TEXT NOT NULL,
   job_title     TEXT NOT NULL DEFAULT '',
   department    TEXT NOT NULL DEFAULT '',
@@ -29,19 +30,23 @@ CREATE TABLE IF NOT EXISTS signatures (
   viber_url     TEXT NOT NULL DEFAULT '',
   rendered_html TEXT NOT NULL,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+  updated_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+  CONSTRAINT signatures_email_company_key UNIQUE (email, company_id)
 );
 
--- Upgrade path for databases created before the one-row-per-email rule:
--- keep the newest row per email, drop the old index, add the unique constraint.
+-- Upgrade path for databases created under earlier rules:
+-- keep the newest row per (email, company), drop old indexes/constraints, add the composite one.
 ALTER TABLE signatures ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now();
-DELETE FROM signatures s USING signatures t WHERE s.email = t.email AND s.id < t.id;
+DELETE FROM signatures s USING signatures t
+  WHERE s.email = t.email AND s.company_id = t.company_id AND s.id < t.id;
 DROP INDEX IF EXISTS signatures_email_created_idx;
+ALTER TABLE signatures DROP CONSTRAINT IF EXISTS signatures_email_key;
 DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'signatures_email_key') THEN
-    ALTER TABLE signatures ADD CONSTRAINT signatures_email_key UNIQUE (email);
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'signatures_email_company_key') THEN
+    ALTER TABLE signatures ADD CONSTRAINT signatures_email_company_key UNIQUE (email, company_id);
   END IF;
 END $$;
+CREATE INDEX IF NOT EXISTS signatures_email_idx ON signatures (email);
 
 -- Activity log: one row per generate click, with a snapshot of what was generated.
 CREATE TABLE IF NOT EXISTS signature_logs (

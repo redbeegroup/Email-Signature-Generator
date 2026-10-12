@@ -22,7 +22,7 @@
     if (!res.ok) return showError('That signature could not be found. Go back to the editor and generate a new one.');
     record = await res.json();
     preview.innerHTML = record.rendered_html;
-    document.getElementById('back').href = `/?email=${encodeURIComponent(record.email)}`;
+    document.getElementById('back').href = `/?email=${encodeURIComponent(record.email)}&company=${record.company_id}`;
   }
 
   // Copy as rich text so mail clients paste the formatted signature.

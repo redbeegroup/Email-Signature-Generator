@@ -13,6 +13,7 @@ import { formatPhone } from './phone.js';
   let companies = [];
   let lastCompanyWebsite = '';
   let lastLookupEmail = '';
+  let found = [];            // stored signatures for the current email, one per company
   let previewTimer;
   let previewSeq = 0;
 
@@ -57,12 +58,15 @@ import { formatPhone } from './phone.js';
     }
   }
   function onCompanyChange() {
+    const stored = found.find((s) => String(s.company_id) === companySelect.value);
+    if (stored) return applyStored(stored);
     const c = companies.find((x) => String(x.id) === companySelect.value);
     const site = c ? c.website_url : '';
     const current = websiteInput.value.trim();
     if (!current || current === lastCompanyWebsite) websiteInput.value = site;
     lastCompanyWebsite = site;
     markValidity(websiteInput);
+    if (found.length) setNotice(`No signature for ${c ? c.name : 'this company'} yet. Your details are kept; generate to create one.`);
   }
 
   // ---- live preview ---------------------------------------------------------
@@ -82,23 +86,33 @@ import { formatPhone } from './phone.js';
     notice.textContent = text;
     notice.hidden = !text;
   }
-  async function lookup(email) {
+  // Fill the form from a stored signature and describe what else exists for this email.
+  function applyStored(sig) {
+    for (const [k, v] of Object.entries(sig)) {
+      const el = form.elements[k];
+      if (el && typeof v === 'string') el.value = v;
+    }
+    companySelect.value = String(sig.company_id);
+    if (!companySelect.value) companySelect.value = '';
+    lastCompanyWebsite = (companies.find((x) => x.id === sig.company_id) || {}).website_url || '';
+    const when = formatDate(sig.updated_at || sig.created_at);
+    const others = found.filter((s) => s.id !== sig.id).map((s) => s.company_name);
+    let text = `We found your ${sig.company_name} signature (last generated ${when}) and loaded it. Edit anything you like and generate again to update it.`;
+    if (others.length) text += ` You also have one for ${others.join(', ')}: switch company to load it.`;
+    setNotice(text);
+    markAll();
+    schedulePreview();
+  }
+
+  async function lookup(email, preferCompanyId) {
     email = email.trim().toLowerCase();
     if (!EMAIL_RE.test(email) || email === lastLookupEmail) return;
     lastLookupEmail = email;
     const { ok, json } = await api('GET', `/api/signatures/lookup?email=${encodeURIComponent(email)}`);
-    if (!ok) { setNotice(''); return; }
-    for (const [k, v] of Object.entries(json)) {
-      const el = form.elements[k];
-      if (el && typeof v === 'string') el.value = v;
-    }
-    companySelect.value = String(json.company_id);
-    if (!companySelect.value) companySelect.value = '';
-    lastCompanyWebsite = (companies.find((x) => x.id === json.company_id) || {}).website_url || '';
-    const when = formatDate(json.updated_at || json.created_at);
-    setNotice(`We found your signature (last generated ${when}) and loaded it. Edit anything you like and generate again to update it.`);
-    markAll();
-    schedulePreview();
+    found = ok ? json.signatures : [];
+    if (!found.length) { setNotice(''); return; }
+    const preferred = found.find((s) => String(s.company_id) === String(preferCompanyId || companySelect.value));
+    applyStored(preferred || found[0]);
   }
 
   // ---- generate -------------------------------------------------------------
@@ -137,6 +151,7 @@ import { formatPhone } from './phone.js';
     form.reset();
     lastCompanyWebsite = '';
     lastLookupEmail = '';
+    found = [];
     preview.innerHTML = '';
     setNotice('');
     showError('');
@@ -166,11 +181,12 @@ import { formatPhone } from './phone.js';
 
   (async () => {
     await loadCompanies();
-    const fromUrl = new URLSearchParams(location.search).get('email');
+    const params = new URLSearchParams(location.search);
+    const fromUrl = params.get('email');
     if (fromUrl) {
       emailInput.value = fromUrl;
       markValidity(emailInput);
-      await lookup(fromUrl);
+      await lookup(fromUrl, params.get('company'));
     }
   })();
 })();

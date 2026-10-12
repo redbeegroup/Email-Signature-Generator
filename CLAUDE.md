@@ -1,6 +1,6 @@
 # Email Signature Generator
 
-Internal web app: staff pick a company, fill in details, preview live, generate, copy, and follow Outlook / Apple Mail how-tos. `signatures` holds exactly one row per email (upserted on generate); `signature_logs` records every generate click. Entering a known email pre-fills the form from its row.
+Internal web app: staff pick a company, fill in details, preview live, generate, copy, and follow Outlook / Apple Mail how-tos. `signatures` holds one row per (email, company) pair (upserted on generate), so one person can have a signature for each company; `signature_logs` records every generate click. Entering a known email pre-fills the form from the newest row, and switching company loads that company's row if it exists.
 
 ## Stack
 Node 22 + Express (ESM, no build step), PostgreSQL 16, Handlebars templates stored in the DB, vanilla JS/CSS frontend in `public/`. Three containers: `app` (8080), `db`, `adminer` (8081).
@@ -14,7 +14,7 @@ Node 22 + Express (ESM, no build step), PostgreSQL 16, Handlebars templates stor
 
 ## Conventions
 - `db/schema.sql` is applied idempotently on every start (`CREATE ... IF NOT EXISTS`). Schema changes must be additive or guarded.
-- One email = one `signatures` row. Never insert duplicates; generate does `INSERT ... ON CONFLICT (email) DO UPDATE` and appends to `signature_logs`.
+- One (email, company) = one `signatures` row. Never insert duplicates; generate does `INSERT ... ON CONFLICT (email, company_id) DO UPDATE` and appends to `signature_logs`. `GET /api/signatures/lookup?email=` returns `{ signatures: [...] }` newest first (optional `company_id` filter).
 - `src/seed.js` only INSERTs companies whose slug is missing. It never updates rows, so edits made in Adminer are authoritative. To push updated seed templates into an existing DB rebuild the image first, then `docker compose exec app node src/seed.js --sync-templates --only=<slug>` (overwrites `template_html` only; without `--only` all slugs in `companies.json`).
 - Templates are Handlebars fragments with placeholders: `name job_title department company_name office_phone mobile_phone website_url email logo_url linkedin_url whatsapp_url viber_url assets`. Helpers: `tel` (digits only), `or`, `and`, `stripProtocol`. Wrap every optional field in `{{#if field}}...{{/if}}`.
 - Icons: `phone` (candy-bar mobile), `desk-phone` (office), `email`, `link`, `globe`, `linkedin`, `whatsapp`, `viber`. Company-specific icon sets uploaded by the user get a colour suffix per company (Onelink `0066ff`, Yathar Cho `ff0000`). Templates reference them as `{{icon "<name>-<hex>"}}`, resolved through the `icons` table (seeded from `seeds/icons.json`, hosted on Cloudflare Images) with fallback `PUBLIC_BASE_URL/icons/<name>.png`. `--sync-icons` on `src/seed.js` overwrites the table from the file. Recipients' mail clients fetch these URLs, so they must be public HTTPS.

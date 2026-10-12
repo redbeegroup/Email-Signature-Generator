@@ -43,7 +43,7 @@ signaturesRouter.post('/preview', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// Generate: validate, render, then insert or update the one row for this email
+// Generate: validate, render, then insert or update the row for this (email, company)
 // and append an entry to signature_logs.
 signaturesRouter.post('/', async (req, res, next) => {
   try {
@@ -54,7 +54,7 @@ signaturesRouter.post('/', async (req, res, next) => {
       `INSERT INTO signatures (email, name, job_title, department, company_id, office_phone,
          mobile_phone, website_url, linkedin_url, whatsapp_url, viber_url, rendered_html)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
-       ON CONFLICT (email) DO UPDATE SET
+       ON CONFLICT (email, company_id) DO UPDATE SET
          name = EXCLUDED.name, job_title = EXCLUDED.job_title, department = EXCLUDED.department,
          company_id = EXCLUDED.company_id, office_phone = EXCLUDED.office_phone,
          mobile_phone = EXCLUDED.mobile_phone, website_url = EXCLUDED.website_url,
@@ -73,17 +73,26 @@ signaturesRouter.post('/', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// The stored signature for an email (used to pre-fill the editor).
+// All stored signatures for an email, newest first, one per company (pre-fills the editor).
+// Optional company_id narrows it to that company's signature.
 signaturesRouter.get('/lookup', async (req, res, next) => {
   try {
     const email = String(req.query.email || '').trim().toLowerCase();
     if (!email) return res.status(400).json({ error: 'email is required' });
+    const companyId = Number.parseInt(req.query.company_id, 10);
+    const params = [email];
+    let where = 'email = $1';
+    if (Number.isFinite(companyId)) { params.push(companyId); where += ' AND company_id = $2'; }
     const { rows } = await query(
-      `SELECT ${PUBLIC_COLS} FROM signatures WHERE email = $1`,
-      [email]
+      `SELECT s.id, s.email, s.name, s.job_title, s.department, s.company_id, c.name AS company_name,
+              s.office_phone, s.mobile_phone, s.website_url, s.linkedin_url, s.whatsapp_url, s.viber_url,
+              s.created_at, s.updated_at
+         FROM signatures s JOIN companies c ON c.id = s.company_id
+        WHERE ${where} ORDER BY s.updated_at DESC, s.id DESC`,
+      params
     );
-    if (!rows[0]) return res.status(404).json({ error: 'not found' });
-    res.json(rows[0]);
+    if (!rows.length) return res.status(404).json({ error: 'not found', signatures: [] });
+    res.json({ signatures: rows });
   } catch (err) { next(err); }
 });
 

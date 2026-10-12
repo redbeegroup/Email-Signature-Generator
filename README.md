@@ -41,7 +41,7 @@ Update: `git pull && docker compose -f docker-compose.yml -f docker-compose.prod
 Three tables (see `db/schema.sql`), applied automatically on start:
 
 - `companies` — `name`, `slug`, `logo_url`, `website_url`, `template_html`, `is_active`, `sort_order`.
-- `signatures` — exactly one row per email address: person fields, `company_id`, `rendered_html`, `created_at`, `updated_at`. Generating again for the same email updates this row.
+- `signatures` — one row per email address **per company**: person fields, `company_id`, `rendered_html`, `created_at`, `updated_at`. Generating again for the same email and company updates that row; choosing a different company creates a separate signature for the same person.
 - `icons` — icon `name` → public `url` (seeded from `seeds/icons.json`, currently Cloudflare Images). Templates use `{{icon "name"}}`; an empty or missing url falls back to `PUBLIC_BASE_URL/icons/<name>.png`.
 - `signature_logs` — one row per generate click: `signature_id`, `email`, `action` (`created` or `updated`), `data` (JSON snapshot of the submitted fields), `rendered_html`, `created_at`. This is the history.
 
