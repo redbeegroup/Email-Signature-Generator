@@ -26,9 +26,9 @@
   {
     "name": "Myanmar Parama Technologies Co., Ltd.",
     "slug": "parama",
-    "logo_url": "",
-    "website_url": "",
-    "template": "default.html",
+    "logo_url": "https://imagedelivery.net/rvjv7XMSupWZCyUdtewEgQ/5eaf5e11-5e86-412b-8859-9c3c1253c600/public",
+    "website_url": "https://myanmarparama.com",
+    "template": "parama.html",
     "sort_order": 40
   },
   {
