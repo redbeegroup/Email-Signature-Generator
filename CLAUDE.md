@@ -9,7 +9,7 @@ Node 22 + Express (ESM, no build step), PostgreSQL 16, Handlebars templates stor
 - Local: `cp .env.example .env` then `docker compose up --build` (auto-loads `compose.override.yml`, which exposes Postgres on 127.0.0.1:5433 for tests).
 - Unit tests: `npm test` (API tests self-skip unless `DATABASE_URL` is set).
 - API tests: `DATABASE_URL=postgres://sig:<pw>@127.0.0.1:5433/signatures npm test`
-- Production: `docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build` (Adminer bound to localhost only; reach via `ssh -L 8081:localhost:8081`).
+- Production (Portainer): stack from the GitHub repo using `docker-compose.portainer.yml` (self-contained; env vars set in the Portainer form). Manual alternative: `docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build`. Adminer is bound to localhost on the host; reach via `ssh -L 8081:localhost:8081`.
 - Rebuild icons after editing `scripts/svg/` or colour lists: `npm run icons` (needs dev deps, run on the host, commit the PNGs).
 
 ## Conventions

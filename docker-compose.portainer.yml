@@ -1,0 +1,49 @@
+# Self-contained stack for Portainer (Stacks -> Add stack -> Repository).
+# Set these environment variables in the Portainer stack form:
+#   POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB   (database credentials)
+#   PUBLIC_BASE_URL   public HTTPS URL of the app, e.g. https://signature.example.com
+#   APP_PORT          host port for the app (default 8080)
+#   ADMINER_PORT      host port for Adminer (default 8081)
+#   ADMINER_BIND      127.0.0.1 (default, reach via SSH tunnel) or 0.0.0.0 to expose on the host
+services:
+  app:
+    build: .
+    image: email-signature-generator:latest
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:8080}
+      PORT: 8080
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: always
+
+  adminer:
+    image: adminer:latest
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+    ports:
+      - "${ADMINER_BIND:-127.0.0.1}:${ADMINER_PORT:-8081}:8080"
+    depends_on:
+      - db
+    restart: always
+
+volumes:
+  pgdata:
