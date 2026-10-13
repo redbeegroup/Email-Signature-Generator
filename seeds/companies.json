@@ -10,9 +10,9 @@
   {
     "name": "Cho Cho Industry Ltd.",
     "slug": "chocho-industry",
-    "logo_url": "",
-    "website_url": "",
-    "template": "default.html",
+    "logo_url": "https://imagedelivery.net/rvjv7XMSupWZCyUdtewEgQ/b454f24c-7133-47ca-c776-64b831c5b800/public",
+    "website_url": "https://www.chochoindustry.com",
+    "template": "chocho-industry.html",
     "sort_order": 20
   },
   {

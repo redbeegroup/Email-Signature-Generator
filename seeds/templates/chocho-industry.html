@@ -1,0 +1,76 @@
+<table style="font-size: small; font-family: Helvetica;" border="0" width="600" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <td>
+        <table style="font-size: small; font-family: Helvetica;" border="0" cellspacing="0" cellpadding="0">
+          <tbody>
+            <tr>
+              <td style="vertical-align: middle;">
+                <p style="margin: 0px; color: rgb(0, 0, 0); font-size: 12px; line-height: 18px;"><span>Sincerely Yours,</span></p>
+                <h2 style="margin: 0px; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); font-weight: 600; line-height: 18px;"><span>{{name}}</span></h2>
+                {{#if job_title}}<p style="margin: 0px; color: rgb(0, 0, 0); font-size: 12px; line-height: 18px;"><span>{{job_title}}</span></p>{{/if}}
+                {{#if department}}<p style="margin: 0px; color: rgb(0, 0, 0); font-size: 12px; line-height: 18px;"><span>{{department}}</span></p>{{/if}}
+                <p style="margin: 0px; color: rgb(0, 0, 0); font-size: 12px; line-height: 18px;"><span>{{company_name}}</span></p>
+                <table style="font-size: small; font-family: Helvetica; width: 100%;" border="0" cellspacing="0" cellpadding="0">
+                  <tbody>
+                    <tr><td height="14">&nbsp;</td></tr>
+                  </tbody>
+                </table>
+                <table style="font-size: small; font-family: Helvetica; line-height: 1;" border="0" cellspacing="0" cellpadding="0">
+                  <tbody>
+                    {{#if office_phone}}
+                    <tr style="vertical-align: middle; height: 16px;">
+                      <td style="vertical-align: middle;" width="24"><img style="display: block;" src="{{icon "desk-phone-017dc5"}}" alt="office phone" width="16" height="16"></td>
+                      <td style="padding: 0px; color: #000000;"><a style="text-decoration: none; color: #000000; font-size: 12px;" href="tel:{{tel office_phone}}">{{office_phone}}</a></td>
+                    </tr>
+                    {{/if}}
+                    {{#if mobile_phone}}
+                    <tr style="vertical-align: middle; height: 16px;">
+                      <td style="vertical-align: middle;" width="24"><img style="display: block;" src="{{icon "phone-017dc5"}}" alt="mobile" width="16" height="16"></td>
+                      <td style="padding: 0px; color: #000000;"><a style="text-decoration: none; color: #000000; font-size: 12px;" href="tel:{{tel mobile_phone}}">{{mobile_phone}}</a></td>
+                    </tr>
+                    {{/if}}
+                    <tr style="vertical-align: middle; height: 16px;">
+                      <td style="vertical-align: middle;" width="24"><img style="display: block;" src="{{icon "email-017dc5"}}" alt="email" width="16" height="16"></td>
+                      <td style="padding: 0px; color: #000000;"><a style="text-decoration: none; color: #000000; font-size: 12px;" href="mailto:{{email}}">{{email}}</a></td>
+                    </tr>
+                    {{#if website_url}}
+                    <tr style="vertical-align: middle; height: 16px;">
+                      <td style="vertical-align: middle;" width="24"><img style="display: block;" src="{{icon "globe-017dc5"}}" alt="website" width="16" height="16"></td>
+                      <td style="padding: 0px; color: #000000;"><a style="text-decoration: none; color: #000000; font-size: 12px;" href="{{website_url}}">{{website_url}}</a></td>
+                    </tr>
+                    {{/if}}
+                  </tbody>
+                </table>
+              </td>
+              <td width="30">&nbsp;</td>
+              <td style="width: 1px; height: auto; border-bottom: medium; border-left: 3px solid #017dc5;" width="1">&nbsp;</td>
+              <td width="30">&nbsp;</td>
+              <td style="vertical-align: middle;">
+                <table style="font-size: small; font-family: Helvetica;" border="0" cellspacing="0" cellpadding="0">
+                  <tbody>
+                    {{#if logo_url}}
+                    <tr><td align="right"><img style="max-height: 150px; display: block;" src="{{logo_url}}" alt="{{company_name}}" height="150"></td></tr>
+                    <tr><td height="24">&nbsp;</td></tr>
+                    {{/if}}
+                    {{#if (or linkedin_url whatsapp_url viber_url)}}
+                    <tr>
+                      <td style="text-align: right;">
+                        <div>
+                          {{#if linkedin_url}}<a style="display: inline-block; padding: 0px;" href="{{linkedin_url}}"><img style="display: block;" src="{{icon "linkedin-0a0f1f"}}" alt="linkedin" width="24" height="24"></a>&nbsp;&nbsp;{{/if}}
+                          {{#if whatsapp_url}}<a style="display: inline-block; padding: 0px;" href="{{whatsapp_url}}"><img style="display: block;" src="{{icon "whatsapp-0a0f1f"}}" alt="whatsapp" width="24" height="24"></a>&nbsp;&nbsp;{{/if}}
+                          {{#if viber_url}}<a style="display: inline-block; padding: 0px;" href="{{viber_url}}"><img style="display: block;" src="{{icon "viber-0a0f1f"}}" alt="viber" width="24" height="24"></a>{{/if}}
+                        </div>
+                      </td>
+                    </tr>
+                    {{/if}}
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
