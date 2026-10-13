@@ -50,9 +50,9 @@
   {
     "name": "Cho Cho Co., Ltd.",
     "slug": "chocho",
-    "logo_url": "",
+    "logo_url": "https://imagedelivery.net/rvjv7XMSupWZCyUdtewEgQ/ccc548bc-e42f-4af9-69c1-e889b4087700/public",
     "website_url": "",
-    "template": "default.html",
+    "template": "chocho.html",
     "sort_order": 70
   }
 ]
