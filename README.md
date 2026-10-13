@@ -17,7 +17,7 @@ Stop with `docker compose down` (add `-v` to also wipe the database volume).
 
 ## Deploy with Portainer (recommended)
 
-Portainer deploys the stack directly from this GitHub repository and builds the image on the Docker host.
+Every push to `main` builds the image with GitHub Actions and publishes it to `ghcr.io/redbeegroup/email-signature-generator`. Portainer pulls that image; it does not build on the host (builds do not work through the Portainer Edge Agent).
 
 1. **GitHub token.** The repo is private, so create a fine-grained personal access token at GitHub → Settings → Developer settings → Fine-grained tokens, limited to this repository with **Contents: Read-only**.
 2. In Portainer open the environment, go to **Stacks → Add stack**, name it `email-signature`, and choose **Repository**.
@@ -33,12 +33,13 @@ Portainer deploys the stack directly from this GitHub repository and builds the 
    - `PUBLIC_BASE_URL` = the public HTTPS address the app will have, e.g. `https://signature.example.com`
    - optional: `APP_PORT` (default 8080), `ADMINER_PORT` (default 8081), `ADMINER_BIND` (default `127.0.0.1`)
 5. Optionally enable **GitOps updates** (polling) so every push to `main` redeploys automatically.
-6. Click **Deploy the stack**. The first build takes a minute or two. On start the app creates the tables and seeds the seven companies, templates and icon URLs.
-7. Put your reverse proxy (Nginx Proxy Manager, Traefik, Caddy) in front of `APP_PORT` with HTTPS, using the same host as `PUBLIC_BASE_URL`.
+6. If the GitHub package is private, add a registry in Portainer (Registries → Add registry → GitHub, with a classic token that has `read:packages`) and select it under **Registries** in the stack form. A public package needs no registry.
+7. Click **Deploy the stack**. On start the app creates the tables and seeds the seven companies, templates and icon URLs.
+8. Put your reverse proxy (Nginx Proxy Manager, Traefik, Caddy) in front of `APP_PORT` with HTTPS, using the same host as `PUBLIC_BASE_URL`.
 
 Adminer is bound to `127.0.0.1` on the host by default; reach it with `ssh -L 8081:localhost:8081 user@host` and open http://localhost:8081 (System: PostgreSQL, Server: `db`). Set `ADMINER_BIND=0.0.0.0` only if the host is firewalled.
 
-To update later: push to `main`, then in Portainer open the stack and click **Pull and redeploy** (or let GitOps do it). Template or icon changes in the seed files are applied to an existing database with `node src/seed.js --sync-templates --only=<slug>` or `--sync-icons` from the app container's **Console** in Portainer.
+To update later: push to `main`, wait for the "Build and publish image" workflow to finish, then in Portainer open the stack and click **Pull and redeploy** (or let GitOps do it). Template or icon changes in the seed files are applied to an existing database with `node src/seed.js --sync-templates --only=<slug>` or `--sync-icons` from the app container's **Console** in Portainer.
 
 ## Deploy manually with Docker Compose
 
