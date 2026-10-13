@@ -7,6 +7,7 @@
 #   APP_PORT          host port for the app (default 8080)
 #   ADMINER_PORT      host port for Adminer (default 8081)
 #   ADMINER_BIND      127.0.0.1 (default, reach via SSH tunnel) or 0.0.0.0 to expose on the host
+#   SYNC_SEEDS_ON_START  true to overwrite templates and icon URLs from the seed files on every start
 services:
   app:
     image: ghcr.io/redbeegroup/email-signature-generator:latest
@@ -16,6 +17,7 @@ services:
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:8080}
+      SYNC_SEEDS_ON_START: ${SYNC_SEEDS_ON_START:-false}
       PORT: 8080
     depends_on:
       db:

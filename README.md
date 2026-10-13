@@ -31,6 +31,7 @@ Every push to `main` builds the image with GitHub Actions and publishes it to `g
    - `POSTGRES_PASSWORD` = a strong password
    - `POSTGRES_DB` = `signatures`
    - `PUBLIC_BASE_URL` = the public HTTPS address the app will have, e.g. `https://signature.example.com`
+   - `SYNC_SEEDS_ON_START` = `true` so every redeploy applies the templates and icon URLs from the repo (recommended when designs are managed in the repo rather than in Adminer)
    - optional: `APP_PORT` (default 8080), `ADMINER_PORT` (default 8081), `ADMINER_BIND` (default `127.0.0.1`)
 5. Optionally enable **GitOps updates** (polling) so every push to `main` redeploys automatically.
 6. If the GitHub package is private, add a registry in Portainer (Registries → Add registry → GitHub, with a classic token that has `read:packages`) and select it under **Registries** in the stack form. A public package needs no registry.
@@ -39,7 +40,7 @@ Every push to `main` builds the image with GitHub Actions and publishes it to `g
 
 Adminer is bound to `127.0.0.1` on the host by default; reach it with `ssh -L 8081:localhost:8081 user@host` and open http://localhost:8081 (System: PostgreSQL, Server: `db`). Set `ADMINER_BIND=0.0.0.0` only if the host is firewalled.
 
-To update later: push to `main`, wait for the "Build and publish image" workflow to finish, then in Portainer open the stack and click **Pull and redeploy** (or let GitOps do it). Template or icon changes in the seed files are applied to an existing database with `node src/seed.js --sync-templates --only=<slug>` or `--sync-icons` from the app container's **Console** in Portainer.
+To update later: push to `main`, wait for the "Build and publish image" workflow to finish, then in Portainer open the stack and click **Pull and redeploy** (or let GitOps do it). With `SYNC_SEEDS_ON_START=true` template and icon changes from the repo are applied on every redeploy. Without it, run `node src/seed.js --sync-templates --only=<slug>` or `--sync-icons` from the app container's **Console** in Portainer.
 
 ## Deploy manually with Docker Compose
 
