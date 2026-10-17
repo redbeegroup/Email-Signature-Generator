@@ -53,13 +53,14 @@
                     <tr><td align="right"><img style="max-height: 112px; display: block;" src="{{logo_url}}" alt="{{company_name}}" height="112"></td></tr>
                     <tr><td height="24">&nbsp;</td></tr>
                     {{/if}}
-                    {{#if (or linkedin_url whatsapp_url viber_url)}}
+                    {{#if (or linkedin_url website_url whatsapp_url viber_url)}}
                     <tr>
                       <td style="text-align: right;">
                         <table cellpadding="0" cellspacing="0" border="0" align="right" style="font-size: small; font-family: Helvetica;">
                             <tbody>
                               <tr>
                                 {{#if linkedin_url}}<td style="padding: 0 0 0 8px;"><a href="{{linkedin_url}}" style="text-decoration: none;"><img alt="linkedin" width="24" height="24" style="display: block; width: 24px; height: 24px; border: 0;" src="{{icon "linkedin-0a0f1f"}}"></a></td>{{/if}}
+                                {{#if website_url}}<td style="padding: 0 0 0 8px;"><a href="{{website_url}}" style="text-decoration: none;"><img alt="website link" width="24" height="24" style="display: block; width: 24px; height: 24px; border: 0;" src="{{icon "website-0a0f1f"}}"></a></td>{{/if}}
                                 {{#if whatsapp_url}}<td style="padding: 0 0 0 8px;"><a href="{{whatsapp_url}}" style="text-decoration: none;"><img alt="whatsapp" width="24" height="24" style="display: block; width: 24px; height: 24px; border: 0;" src="{{icon "whatsapp-0a0f1f"}}"></a></td>{{/if}}
                                 {{#if viber_url}}<td style="padding: 0 0 0 8px;"><a href="{{viber_url}}" style="text-decoration: none;"><img alt="viber" width="24" height="24" style="display: block; width: 24px; height: 24px; border: 0;" src="{{icon "viber-0a0f1f"}}"></a></td>{{/if}}
                               </tr>
