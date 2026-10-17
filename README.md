@@ -99,7 +99,8 @@ Templates are [Handlebars](https://handlebarsjs.com/) HTML fragments.
 | `{{company_name}}` `{{logo_url}}` | from the company row |
 | `{{office_phone}}` `{{mobile_phone}}` `{{email}}` | from the form |
 | `{{website_url}}` | form value, or the company's `website_url` if blank |
-| `{{linkedin_url}}` `{{whatsapp_url}}` `{{viber_url}}` | from the form (phone numbers are converted to `wa.me` / `viber://` links) |
+| `{{linkedin_url}}` | from the form |
+| `{{whatsapp_url}}` `{{viber_url}}` | always empty: these fields are hidden from the editor and cleared in the database |
 | `{{icon "desk-phone-0066ff"}}` | URL from the `icons` table, else `PUBLIC_BASE_URL/icons/<name>.png` |
 | `{{assets}}` | `PUBLIC_BASE_URL/icons` (plain fallback base) |
 

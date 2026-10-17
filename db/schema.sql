@@ -68,3 +68,7 @@ CREATE TABLE IF NOT EXISTS icons (
   url         TEXT NOT NULL DEFAULT '',
   updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- WhatsApp and Viber were removed from the editor: keep the columns but clear any stored values.
+UPDATE signatures SET whatsapp_url = '', viber_url = '' WHERE whatsapp_url <> '' OR viber_url <> '';
+UPDATE signature_logs SET data = (data - 'whatsapp_url') - 'viber_url' WHERE data ? 'whatsapp_url' OR data ? 'viber_url';

@@ -2,6 +2,8 @@ import { FIELDS } from './render.js';
 import { formatPhone, phoneDigits } from '../public/js/phone.js';
 
 const URL_FIELDS = ['website_url', 'linkedin_url', 'whatsapp_url', 'viber_url'];
+// Fields removed from the editor. Always stored empty; the conversion code stays for a possible return.
+export const HIDDEN_FIELDS = ['whatsapp_url', 'viber_url'];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const looksLikePhone = (s) => /^[+\d][\d\s().-]{4,}$/.test(s);
@@ -23,6 +25,7 @@ export function normalizeInput(body = {}) {
   out.office_phone = formatPhone(out.office_phone);
   out.mobile_phone = formatPhone(out.mobile_phone);
   for (const f of URL_FIELDS) out[f] = normalizeUrl(f, out[f]);
+  for (const f of HIDDEN_FIELDS) out[f] = '';
   const id = Number.parseInt(body.company_id, 10);
   out.company_id = Number.isFinite(id) ? id : null;
   return out;

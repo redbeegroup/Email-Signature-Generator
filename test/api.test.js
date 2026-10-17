@@ -77,7 +77,8 @@ if (!DB) {
     const one = await request(app).get('/api/signatures/lookup').query({ email: TEST_EMAIL }).expect(200);
     assert.equal(one.body.signatures.length, 1);
     assert.equal(one.body.signatures[0].id, first.body.id);
-    assert.equal(one.body.signatures[0].whatsapp_url, 'https://wa.me/9595107034');
+    assert.equal(one.body.signatures[0].whatsapp_url, '', 'hidden field is never stored');
+    assert.doesNotMatch(second.body.html, /alt="whatsapp"/);
     assert.equal(one.body.signatures[0].company_name, company.name);
 
     // Same email, different company -> a second row.

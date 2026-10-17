@@ -23,13 +23,10 @@ test('formats office and mobile phone numbers', () => {
   assert.equal(out.mobile_phone, '+95 9 510 7034');
 });
 
-test('turns phone numbers into wa.me and viber links', () => {
-  const out = normalizeInput({ whatsapp_url: '+95 9 510 7034', viber_url: '09 510 7034' });
-  assert.equal(out.whatsapp_url, 'https://wa.me/9595107034');
-  assert.equal(out.viber_url, 'viber://chat?number=%2B9595107034');
-  const keep = normalizeInput({ whatsapp_url: 'https://wa.me/123', viber_url: 'viber://chat?number=%2B123' });
-  assert.equal(keep.whatsapp_url, 'https://wa.me/123');
-  assert.equal(keep.viber_url, 'viber://chat?number=%2B123');
+test('WhatsApp and Viber are hidden: always stored empty whatever is sent', () => {
+  const out = normalizeInput({ whatsapp_url: '+95 9 510 7034', viber_url: 'viber://chat?number=%2B123' });
+  assert.equal(out.whatsapp_url, '');
+  assert.equal(out.viber_url, '');
 });
 
 test('validation errors for required fields', () => {
