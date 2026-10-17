@@ -31,7 +31,7 @@ Every push to `main` builds the image with GitHub Actions and publishes it to `g
    - `POSTGRES_PASSWORD` = a strong password
    - `POSTGRES_DB` = `signatures`
    - `PUBLIC_BASE_URL` = the public HTTPS address the app will have, e.g. `https://signature.example.com`
-   - `SYNC_SEEDS_ON_START` = `true` so every redeploy applies the templates and icon URLs from the repo (recommended when designs are managed in the repo rather than in Adminer)
+   - `SYNC_SEEDS_ON_START` = `true` so every redeploy applies the templates, icon URLs and company logo/website/LinkedIn from the repo (recommended when these are managed in the repo rather than in Adminer)
    - optional: `APP_PORT` (default 8080), `ADMINER_PORT` (default 8081), `ADMINER_BIND` (default `127.0.0.1`)
 5. Optionally enable **GitOps updates** (polling) so every push to `main` redeploys automatically.
 6. If the GitHub package is private, add a registry in Portainer (Registries → Add registry → GitHub, with a classic token that has `read:packages`) and select it under **Registries** in the stack form. A public package needs no registry.
@@ -86,6 +86,8 @@ docker compose exec app node src/seed.js --sync-templates --only=yatharcho
 ```
 
 Without `--only=...` every company listed in `seeds/companies.json` is synced. This overwrites `template_html` only. Logo, website and name are left as they are in the database.
+
+Company logo, website and LinkedIn URLs can also be pushed from the seed file with `node src/seed.js --sync-links`.
 
 Icon URLs work the same way: `seeds/icons.json` is inserted once, edits in Adminer win, and `node src/seed.js --sync-icons` overwrites them from the file. To move an icon, upload the PNG from `public/icons/`, then put its URL in the `icons` table (or the seed file and sync).
 

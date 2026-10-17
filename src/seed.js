@@ -65,6 +65,23 @@ export async function syncIcons() {
 }
 
 /**
+ * Overwrite logo_url, website_url and linkedin_url for every company in
+ * seeds/companies.json (name and template untouched). Explicit, opt-in.
+ */
+export async function syncCompanyLinks() {
+  let updated = 0;
+  for (const c of loadSeedCompanies()) {
+    const res = await query(
+      'UPDATE companies SET logo_url = $1, website_url = $2, linkedin_url = $3, updated_at = now() WHERE slug = $4',
+      [c.logo_url || '', c.website_url || '', c.linkedin_url || '', c.slug]
+    );
+    updated += res.rowCount;
+  }
+  console.log(`[seed] company links synced: ${updated}`);
+  return updated;
+}
+
+/**
  * Overwrite template_html for every company listed in seeds/companies.json
  * with the current seed file. Explicit, opt-in: it discards template edits
  * made in Adminer for those companies (logo, website, name are untouched).
@@ -87,6 +104,7 @@ export async function syncTemplates(onlySlugs = null) {
 //       node src/seed.js --sync-templates  -> also overwrite templates from seed files
 //       node src/seed.js --sync-templates --only=onelink,yatharcho  -> only those slugs
 //       node src/seed.js --sync-icons      -> also overwrite icon urls from seeds/icons.json
+//       node src/seed.js --sync-links      -> also overwrite company logo/website/linkedin from seeds
 if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
   const { initDb, closeDb } = await import('./db.js');
   await initDb();
@@ -95,5 +113,6 @@ if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).
   const only = process.argv.find((a) => a.startsWith('--only='));
   if (process.argv.includes('--sync-templates')) await syncTemplates(only ? only.slice(7).split(',') : null);
   if (process.argv.includes('--sync-icons')) await syncIcons();
+  if (process.argv.includes('--sync-links')) await syncCompanyLinks();
   await closeDb();
 }
