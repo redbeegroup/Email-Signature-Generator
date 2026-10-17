@@ -47,6 +47,7 @@ export function renderSignature(company, data, { assetsBase, icons = {} }) {
   const ctx = {};
   for (const f of FIELDS) ctx[f] = data[f] ? String(data[f]) : '';
   if (!ctx.website_url) ctx.website_url = company.website_url || '';
+  if (!ctx.linkedin_url) ctx.linkedin_url = company.linkedin_url || '';
   ctx.company_name = company.name;
   ctx.logo_url = company.logo_url || '';
   ctx.assets = assetsBase;

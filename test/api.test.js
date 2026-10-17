@@ -33,6 +33,7 @@ if (!DB) {
     assert.ok(res.body.length >= 7);
     assert.ok(res.body.some((c) => c.slug === 'onelink'));
     assert.equal(res.body[0].template_html, undefined);
+    assert.ok('linkedin_url' in res.body[0], 'company LinkedIn is exposed for auto-fill');
   });
 
   test('POST /api/preview renders without storing', async () => {

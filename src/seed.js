@@ -24,10 +24,10 @@ export async function seedCompanies() {
   let inserted = 0;
   for (const c of loadSeedCompanies()) {
     const res = await query(
-      `INSERT INTO companies (name, slug, logo_url, website_url, template_html, sort_order)
-       VALUES ($1, $2, $3, $4, $5, $6)
+      `INSERT INTO companies (name, slug, logo_url, website_url, linkedin_url, template_html, sort_order)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        ON CONFLICT (slug) DO NOTHING`,
-      [c.name, c.slug, c.logo_url || '', c.website_url || '', c.template_html, c.sort_order ?? 100]
+      [c.name, c.slug, c.logo_url || '', c.website_url || '', c.linkedin_url || '', c.template_html, c.sort_order ?? 100]
     );
     inserted += res.rowCount;
   }

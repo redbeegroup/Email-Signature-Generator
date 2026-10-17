@@ -67,7 +67,7 @@ Update: `git pull && docker compose -f docker-compose.yml -f docker-compose.prod
 
 Three tables (see `db/schema.sql`), applied automatically on start:
 
-- `companies` — `name`, `slug`, `logo_url`, `website_url`, `template_html`, `is_active`, `sort_order`.
+- `companies` — `name`, `slug`, `logo_url`, `website_url`, `linkedin_url` (company LinkedIn page, auto-filled into the form), `template_html`, `is_active`, `sort_order`.
 - `signatures` — one row per email address **per company**: person fields, `company_id`, `rendered_html`, `created_at`, `updated_at`. Generating again for the same email and company updates that row; choosing a different company creates a separate signature for the same person.
 - `icons` — icon `name` → public `url` (seeded from `seeds/icons.json`, currently Cloudflare Images). Templates use `{{icon "name"}}`; an empty or missing url falls back to `PUBLIC_BASE_URL/icons/<name>.png`.
 - `signature_logs` — one row per generate click: `signature_id`, `email`, `action` (`created` or `updated`), `data` (JSON snapshot of the submitted fields), `rendered_html`, `created_at`. This is the history.
@@ -99,7 +99,7 @@ Templates are [Handlebars](https://handlebarsjs.com/) HTML fragments.
 | `{{company_name}}` `{{logo_url}}` | from the company row |
 | `{{office_phone}}` `{{mobile_phone}}` `{{email}}` | from the form |
 | `{{website_url}}` | form value, or the company's `website_url` if blank |
-| `{{linkedin_url}}` | from the form |
+| `{{linkedin_url}}` | form value, or the company's `linkedin_url` if blank |
 | `{{whatsapp_url}}` `{{viber_url}}` | always empty: these fields are hidden from the editor and cleared in the database |
 | `{{icon "desk-phone-0066ff"}}` | URL from the `icons` table, else `PUBLIC_BASE_URL/icons/<name>.png` |
 | `{{assets}}` | `PUBLIC_BASE_URL/icons` (plain fallback base) |

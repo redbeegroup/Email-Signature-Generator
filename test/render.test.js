@@ -54,6 +54,13 @@ test('escapes HTML in user input', () => {
   assert.match(html, /&lt;script&gt;/);
 });
 
+test('linkedin_url falls back to the company LinkedIn', () => {
+  const c = { ...company, linkedin_url: 'https://www.linkedin.com/company/onelink', template_html: '{{linkedin_url}}' };
+  assert.equal(renderSignature(c, base, { assetsBase: '' }), 'https://www.linkedin.com/company/onelink');
+  assert.equal(renderSignature(c, { ...base, linkedin_url: 'https://www.linkedin.com/in/me' }, { assetsBase: '' }), 'https://www.linkedin.com/in/me');
+  assert.equal(renderSignature({ ...c, linkedin_url: '' }, base, { assetsBase: '' }), '');
+});
+
 test('website_url from data overrides company default', () => {
   const c = { ...company, template_html: '{{website_url}}' };
   assert.equal(renderSignature(c, base, { assetsBase: '' }), 'https://onelink.company');

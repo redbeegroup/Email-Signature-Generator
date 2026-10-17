@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS companies (
   logo_url      TEXT NOT NULL DEFAULT '',
   website_url   TEXT NOT NULL DEFAULT '',
   template_html TEXT NOT NULL DEFAULT '',
+  linkedin_url  TEXT NOT NULL DEFAULT '',
   is_active     BOOLEAN NOT NULL DEFAULT TRUE,
   sort_order    INTEGER NOT NULL DEFAULT 100,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -15,6 +16,8 @@ CREATE TABLE IF NOT EXISTS companies (
 
 -- One row per (email, company). Generating again for the same pair updates the row;
 -- the same email can hold one signature per company.
+ALTER TABLE companies ADD COLUMN IF NOT EXISTS linkedin_url TEXT NOT NULL DEFAULT '';
+
 CREATE TABLE IF NOT EXISTS signatures (
   id            SERIAL PRIMARY KEY,
   email         TEXT NOT NULL,

@@ -29,7 +29,7 @@ a { color: inherit; }
 .hint { color: #d7e3e3; font-size: 13px; margin: 14px 0 0; }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 16px; }
 .field { display: flex; flex-direction: column; gap: 8px; font-size: 13px; font-weight: 600; position: relative; }
-.grid--single { grid-template-columns: 1fr; }
+.field--full { grid-column: 1 / -1; }
 .field b { color: #fff; font-weight: 600; }
 .field input, .field select {
   font: inherit; font-weight: 400; font-size: 15px; color: #fff; background: var(--ink-2);

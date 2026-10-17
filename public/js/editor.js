@@ -8,10 +8,12 @@ import { formatPhone } from './phone.js';
   const companySelect = form.elements.company_id;
   const emailInput = form.elements.email;
   const websiteInput = form.elements.website_url;
+  const linkedinInput = form.elements.linkedin_url;
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   let companies = [];
   let lastCompanyWebsite = '';
+  let lastCompanyLinkedin = '';
   let lastLookupEmail = '';
   let found = [];            // stored signatures for the current email, one per company
   let previewTimer;
@@ -66,6 +68,11 @@ import { formatPhone } from './phone.js';
     if (!current || current === lastCompanyWebsite) websiteInput.value = site;
     lastCompanyWebsite = site;
     markValidity(websiteInput);
+    const li = c ? c.linkedin_url : '';
+    const currentLi = linkedinInput.value.trim();
+    if (!currentLi || currentLi === lastCompanyLinkedin) linkedinInput.value = li;
+    lastCompanyLinkedin = li;
+    markValidity(linkedinInput);
     if (found.length) setNotice(`No signature for ${c ? c.name : 'this company'} yet. Your details are kept; generate to create one.`);
   }
 
@@ -94,7 +101,9 @@ import { formatPhone } from './phone.js';
     }
     companySelect.value = String(sig.company_id);
     if (!companySelect.value) companySelect.value = '';
-    lastCompanyWebsite = (companies.find((x) => x.id === sig.company_id) || {}).website_url || '';
+    const comp = companies.find((x) => x.id === sig.company_id) || {};
+    lastCompanyWebsite = comp.website_url || '';
+    lastCompanyLinkedin = comp.linkedin_url || '';
     const when = formatDate(sig.updated_at || sig.created_at);
     const others = found.filter((s) => s.id !== sig.id).map((s) => s.company_name);
     let text = `We found your ${sig.company_name} signature (last generated ${when}) and loaded it. Edit anything you like and generate again to update it.`;
@@ -150,6 +159,7 @@ import { formatPhone } from './phone.js';
   function clearAll() {
     form.reset();
     lastCompanyWebsite = '';
+    lastCompanyLinkedin = '';
     lastLookupEmail = '';
     found = [];
     preview.innerHTML = '';

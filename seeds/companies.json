@@ -5,7 +5,8 @@
     "logo_url": "https://imagedelivery.net/rvjv7XMSupWZCyUdtewEgQ/eda7868f-b97c-4a8b-bafa-aa6c68cb8100/public",
     "website_url": "https://yumyummyanmar.com",
     "template": "yatharcho.html",
-    "sort_order": 10
+    "sort_order": 10,
+    "linkedin_url": ""
   },
   {
     "name": "Cho Cho Industry Ltd.",
@@ -13,7 +14,8 @@
     "logo_url": "https://imagedelivery.net/rvjv7XMSupWZCyUdtewEgQ/b454f24c-7133-47ca-c776-64b831c5b800/public",
     "website_url": "https://www.chochoindustry.com",
     "template": "chocho-industry.html",
-    "sort_order": 20
+    "sort_order": 20,
+    "linkedin_url": ""
   },
   {
     "name": "Myanmar Zarla Distribution Co., Ltd.",
@@ -21,7 +23,8 @@
     "logo_url": "https://imagedelivery.net/rvjv7XMSupWZCyUdtewEgQ/e1405616-9747-4145-bc53-e537e9903300/public",
     "website_url": "https://www.zarladistribution.com",
     "template": "zarla.html",
-    "sort_order": 30
+    "sort_order": 30,
+    "linkedin_url": ""
   },
   {
     "name": "Myanmar Parama Technologies Co., Ltd.",
@@ -29,7 +32,8 @@
     "logo_url": "https://imagedelivery.net/rvjv7XMSupWZCyUdtewEgQ/f2a7599a-02bf-470f-4ff2-7c0b3fbb8f00/public",
     "website_url": "https://myanmarparama.com",
     "template": "parama.html",
-    "sort_order": 40
+    "sort_order": 40,
+    "linkedin_url": ""
   },
   {
     "name": "Onelink Technologies Co., Ltd.",
@@ -37,7 +41,8 @@
     "logo_url": "https://imagedelivery.net/rvjv7XMSupWZCyUdtewEgQ/a929ab7e-f674-4799-7cab-cf61aac6e200/public",
     "website_url": "https://onelink.company",
     "template": "onelink.html",
-    "sort_order": 50
+    "sort_order": 50,
+    "linkedin_url": ""
   },
   {
     "name": "Cannopy Technologies Co., Ltd.",
@@ -45,7 +50,8 @@
     "logo_url": "https://imagedelivery.net/rvjv7XMSupWZCyUdtewEgQ/96575ac6-5e47-4f96-b23c-d577f3bdba00/public",
     "website_url": "https://cannopysystems.com",
     "template": "cannopy.html",
-    "sort_order": 60
+    "sort_order": 60,
+    "linkedin_url": ""
   },
   {
     "name": "Cho Cho Co., Ltd.",
@@ -53,6 +59,7 @@
     "logo_url": "https://imagedelivery.net/rvjv7XMSupWZCyUdtewEgQ/ccc548bc-e42f-4af9-69c1-e889b4087700/public",
     "website_url": "",
     "template": "chocho.html",
-    "sort_order": 70
+    "sort_order": 70,
+    "linkedin_url": ""
   }
 ]
